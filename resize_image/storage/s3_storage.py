@@ -11,23 +11,35 @@ class S3Storage:
         
 
     def downloadImage(self,bucket: str, key:str):
-        """_summary_
-        Download pre-process image from the upload bucket
+        """
+        Download an image from S3 and load it into memory as a PIL image.
+
         Args:
-            bucket (str): _description_
-            key (str): _description_
+            bucket (str): The source S3 bucket name.
+            key (str): The source object's key.
 
         Returns:
-            _type_: _description_
+            ImageFile: A PIL image created from the downloaded object data.
         """
         image_bytes = self._s3.get_object(Bucket=bucket,Key=key)["Body"].read()
-        
         return Image.open(fp=BytesIO(initial_bytes=image_bytes))
         
     
     def uploadImage(self,image:ImageFile,bucket:str,key:str):
-        image_buffer = BytesIO()
+        """
+        Upload a PIL image to an S3 bucket as a PNG file.
+
+        Args:
+            image (ImageFile): The image to upload.
+            bucket (str): The destination S3 bucket name.
+            key (str): The object's key in the S3 bucket.
+
+        Returns:
+            str: The S3 URI of the uploaded image.
+        """
+                
         
+        image_buffer = BytesIO()
         try:
             image.save(image_buffer,'PNG')
             image_buffer.seek(0) #Set the cursor at the beggining 
@@ -39,12 +51,12 @@ class S3Storage:
                 Key=key                 
                 
             )
+            #TODO check the response 
             
             
         
             url = f"s3://{bucket}/{key}"
             #TODO: Add the new image to the table 
-            
             return url 
             
         except Exception as e:
