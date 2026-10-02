@@ -22,5 +22,9 @@ class S3Event:
     def image_records(self):
         return[record for record in self.records if record.should_process()]
 
-
+    def __len__(self):
+        return len(self.records)
+    
+    def __iter__(self):
+        return iter(self.records)
         
