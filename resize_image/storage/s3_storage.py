@@ -9,3 +9,7 @@ class S3Storage:
         
         
         
+
+    def downloadImage(self,bucket: str, key:str):
+        
+        
