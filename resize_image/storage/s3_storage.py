@@ -25,6 +25,9 @@ class S3Storage:
         return Image.open(fp=BytesIO(initial_bytes=image_bytes))
         
     
+    
+    
+    
     def uploadImage(self,image:ImageFile,bucket:str,key:str):
         """
         Upload a PIL image to an S3 bucket as a PNG file.
