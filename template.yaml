@@ -25,7 +25,12 @@ Resources:
         Type: String
 
 
-
+#*---------S3 Buckets--------
+  MyUploadsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${AWS::StackName}-uploads-${AWS::Region}
+      
 
   
 
