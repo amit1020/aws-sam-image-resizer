@@ -79,7 +79,17 @@ Resources:
 
 
   
-
+Outputs:
+  ResizeImageHandlerArn:
+    Description: Resize image Lambda function ARN
+    Value: !GetAtt ResizeImageHandler.Arn
+  ResizeImageHandlerIamRoleArn:
+    Description: Implicit IAM Role created for the resize function
+    Value: !GetAtt ResizeImageHandlerRole.Arn
+  UploadsBucketName:
+    Value: !Ref MyUploadsBucket
+  OutputsBucketName:
+    Value: !Ref ProcessRawImageBucket
   
 
 
