@@ -11,8 +11,9 @@ class S3Storage:
         
 
     def downloadImage(self,bucket: str, key:str):
-        
         image_bytes = self._s3.get_object(Bucket=bucket,Key=key)["Body"].read()
         
-        pass
+        return Image.open(fp=BytesIO(initial_bytes=image_bytes))
         
+    
+    
