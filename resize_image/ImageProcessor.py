@@ -9,13 +9,14 @@ from io import BytesIO
 
 
 
-@dataclass
-class Config:
-    size:int 
-    output_bucket: str
-    table:str
 
 
 class ImageProcessor:
-    def __init__(self) -> None:
-        pass
+    def __init__(self,s3_client,config) -> None:
+        self.s3 = s3_client
+        self.config = config
+        
+        
+        
+        
+    
