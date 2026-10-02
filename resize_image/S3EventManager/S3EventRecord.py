@@ -10,5 +10,25 @@ class InvalidRecordError(Exception):
 class Record:
     IMAGE_EXTENSIONS: frozenset[str] = frozenset({"jpg", "jpeg", "png", "gif", "webp", "bmp", "tiff"})
     THUMBNAIL_PREFIX: str = "thumbnails/"
-    def __init__(self) -> None:
-        pass
+    def __init__(self,
+                 event_name:str,
+                 event_time: datetime,
+                 bucket_name:str,
+                 key: str, 
+                 raw_key: str,
+                 size: int | None = None,
+                 etag:str  | None = None,
+                 version_id: str | None = None,
+                 sequencer: str | None = None,
+                 arn: str | None = None
+        ) -> None:
+        self.event_name = event_name
+        self.event_time = event_time
+        self.bucket_name = bucket_name
+        self.key = key
+        self.raw_key = raw_key
+        self.size = size
+        self.etag = etag
+        self.version_id = version_id
+        self.sequencer = sequencer
+       
