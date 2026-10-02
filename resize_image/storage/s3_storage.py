@@ -7,8 +7,6 @@ class S3Storage:
     def __init__(self,s3_client) -> None:
         self._s3 = s3_client
         
-        
-        
 
     def downloadImage(self,bucket: str, key:str):
         """

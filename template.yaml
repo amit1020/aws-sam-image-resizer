@@ -31,7 +31,7 @@ Resources:
     Properties:
       BucketName: !Sub ${AWS::StackName}-uploads-${AWS::Region}
 
-  ProcessRawImageBucket:
+  ProcessedRawImageBucket:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub ${AWS::StackName}-outputs-${AWS::Region}
@@ -61,7 +61,7 @@ Resources:
       Environment:
         Variables:
           THUMBNAIL_SIZE: 128
-          OUTPUT_BUCKET: !Ref ProcessRawImageBucket
+          OUTPUT_BUCKET: !Ref ProcessedRawImageBucket
           TABLE_NAME: !Ref ThumbgenProccessImages
       Policies:
         - S3ReadPolicy:
@@ -89,7 +89,7 @@ Outputs:
   UploadsBucketName:
     Value: !Ref MyUploadsBucket
   OutputsBucketName:
-    Value: !Ref ProcessRawImageBucket
+    Value: !Ref ProcessedRawImageBucket
   
 
 
