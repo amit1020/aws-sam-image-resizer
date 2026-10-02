@@ -31,4 +31,27 @@ class Record:
         self.etag = etag
         self.version_id = version_id
         self.sequencer = sequencer
-       
+
+    @classmethod
+    def from_dict(cls,raw_record):
+        try:
+            s3_data = raw_record["s3"]
+            bucket_data = s3_data["bucket"]
+            object_data = s3_data["object"]
+            raw_key = object_data["key"]
+
+            return cls(
+                event_name=raw_record["eventName"],
+                event_time=cls._parse_event_time(raw_record["eventTime"]),
+                bucket_name=bucket_data["name"],
+                key=unquote_plus(raw_key),
+                raw_key=raw_key,
+                size=object_data.get("size"),
+                etag=object_data.get("eTag"),
+                version_id=object_data.get("versionId"),
+                sequencer=object_data.get("sequencer"),
+                arn=bucket_data.get("arn")
+            )
+        except KeyError as e:
+            raise InvalidRecordError(f"Missing expected field: {e}") from e
+        
