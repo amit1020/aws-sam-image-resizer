@@ -12,9 +12,12 @@ class ImageProcessor:
         self._thumbnail_size = thumbnail_size
         
         
-    
-        
-        
-        
-        
-    
+    def createThumbnail(self,image:ImageFile):
+        return ImageOps.fit(
+                    image=image,
+                    size=(
+                        self._thumbnail_size,
+                        self._thumbnail_size,
+                    ),
+                    method=Image.Resampling.LANCZOS,
+                )
