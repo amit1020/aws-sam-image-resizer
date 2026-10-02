@@ -37,7 +37,18 @@ Resources:
       BucketName: !Sub ${AWS::StackName}-outputs-${AWS::Region}
  
 
-      
+#*-----------Layer-------
+  CommonLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: common-layer
+      ContentUri: layers/common
+      CompatibleRuntimes:
+        - python3.14
+      RetentionPolicy: Delete
+    Metadata:
+      BuildMethod: python3.14
+  
 
   
 
