@@ -54,4 +54,55 @@ class Record:
             )
         except KeyError as e:
             raise InvalidRecordError(f"Missing expected field: {e}") from e
+
+    @staticmethod
+    def _parse_event_time(value: str) -> datetime:
+        return datetime.fromisoformat(value.replace("Z", "+00:00"))        
+    
+    
+    @property
+    def filename(self) -> str:
+        return self.key.rsplit("/", 1)[-1]
         
+    
+    
+    @property
+    def extention(self):
+        #?Lowercase file extension without the leading dot, or empty if none
+        name: str = self.filename
+        try:
+            return name.rsplit(".",1)[-1].lower()
+        except Exception as e:
+            raise e
+    
+    @property
+    def is_folder_marker(self):
+        #?return True for console-created folders and empty uploads.
+        return self.key.endswith("/") or not self.size#Check if self.size is 0
+    
+    @property
+    def is_image(self):
+        return self.extention in self.IMAGE_EXTENSIONS
+    
+
+    @property
+    def is_thumbnail(self) -> bool:
+        """True if this object is itself a generated thumbnail."""
+        return self.key.startswith(self.THUMBNAIL_PREFIX)
+
+    @property
+    def thumbnail_key(self) -> str:
+        #?Destination key for the generated thumbnail."""
+        return f"{self.THUMBNAIL_PREFIX}{self.key}"
+
+    def should_process(self) -> bool:
+        #?True if this record represents an image worth resizing."""
+        return (
+            not self.is_folder_marker
+            and self.is_image
+            and not self.is_thumbnail
+        )
+        
+        
+
+
