@@ -48,24 +48,40 @@ Resources:
       RetentionPolicy: Delete
     Metadata:
       BuildMethod: python3.14
-  
+
+ 
+#*-----------LambdaFunction---------
+  ResizeImageHandler:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: resize_image/
+      Handler: app.resize_image_handler
+      Layers: 
+        - !Ref CommonLayer
+      Environment:
+        Variables:
+          THUMBNAIL_SIZE: 128
+          OUTPUT_BUCKET: !Ref ProcessRawImageBucket
+          TABLE_NAME: !Ref ThumbgenProccessImages
+      Policies:
+        - S3ReadPolicy:
+            BucketName: !Sub ${AWS::StackName}-uploads-${AWS::Region}
+        - S3WritePolicy:
+            BucketName: !Sub ${AWS::StackName}-outputs-${AWS::Region}
+        - DynamoDBWritePolicy:
+            TableName: !Ref ThumbgenProccessImages
+      Events:
+        FileUploadEvent:
+          Type: S3 # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Bucket: !Ref MyUploadsBucket
+            Events: s3:ObjectCreated:*
+
 
   
 
+  
 
 
 
-Outputs:
-  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
-  # Find out more about other implicit resources you can reference within SAM
-  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  HelloWorldApi:
-    Description: API Gateway endpoint URL for Prod stage for Hello World 
-      function
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/hello/"
-  HelloWorldFunction:
-    Description: Hello World Lambda Function ARN
-    Value: !GetAtt HelloWorldFunction.Arn
-  HelloWorldFunctionIamRole:
-    Description: Implicit IAM Role created for Hello World function
-    Value: !GetAtt HelloWorldFunctionRole.Arn
+
