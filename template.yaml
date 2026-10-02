@@ -30,6 +30,13 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub ${AWS::StackName}-uploads-${AWS::Region}
+
+  ProcessRawImageBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${AWS::StackName}-outputs-${AWS::Region}
+ 
+
       
 
   
