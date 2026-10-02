@@ -17,4 +17,10 @@ class S3Event:
             except InvalidRecordError as e :
                 logger.warning("Skipping malformed record: %s", e)
         return cls(records)
-                
+        
+    @property
+    def image_records(self):
+        return[record for record in self.records if record.should_process()]
+
+
+        
