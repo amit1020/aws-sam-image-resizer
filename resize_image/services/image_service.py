@@ -34,4 +34,6 @@ class ImageService:
         image: ImageFile = self._storage.downloadImage(bucket=src_bucket,key=src_key)
         thumbnail = self._processor.createThumbnail(image=image)
         
-        return self._storage.uploadImage(image=thumbnail,bucket=self._output_bucket,key=dst_key)
+        url, size_bytes = self._storage.uploadImage(image=thumbnail,bucket=self._output_bucket,key=dst_key)
+        
+        return ""

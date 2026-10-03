@@ -15,9 +15,9 @@ class S3Event:
     @classmethod
     def from_dict(cls,raw_event):
         records = []
-        for raw_record in raw_event.get("Record",[]):
+        for raw_record in raw_event.get("Records",[]):
             try:
-                records.append(Record.from_dict(raw_event))
+                records.append(Record.from_dict(raw_record))
             except InvalidRecordError as e :
                 logger.warning("Skipping malformed record: %s", e)
                 
