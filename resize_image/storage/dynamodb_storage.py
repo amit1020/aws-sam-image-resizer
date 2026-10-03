@@ -38,10 +38,12 @@ class DynamoDBStorage:
     
 
     def delete_thumbnail(self, item_id: str) -> bool:
-        try:
-            self._table.delete_item(Key={'id': item_id})
-            return True
-        except:
-            return False 
+        response = self._table.delete_item(Key={'id': item_id}, ReturnValues='ALL_OLD')
         
+        temp = 'Attributes' in response
+        if temp:
+            logger.info("Deleted thumbnail metadata", extra={"id": item_id})
+        else:
+            logger.info("Thumbnail not found, nothing to delete", extra={"id": item_id})
   
+        return temp
