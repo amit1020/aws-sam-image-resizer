@@ -1,6 +1,6 @@
 from PIL.ImageFile import ImageFile
 from PIL.Image import Image
-from storage import S3Storage
+from storage import S3Storage,DynamoDBStorage
 from processors import ImageProcessor
 
 
@@ -12,8 +12,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 class ImageService:
-    def __init__(self, storage:S3Storage,processor:ImageProcessor, output_bucket:str) -> None:
-        self._s3_storage = storage
+    def __init__(self, s3_storage:S3Storage,processor:ImageProcessor, output_bucket:str, metadata_store:DynamoDBStorage) -> None:
+        self._s3_storage = s3_storage
+        self._metadata_store = metadata_store
         self._processor = processor
         self._output_bucket = output_bucket
         
