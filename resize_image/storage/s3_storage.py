@@ -61,7 +61,10 @@ class S3Storage:
                 Key=key) #The ke
         
             
-            
+        logger.debug(
+            "Uploaded image",
+            extra={"bucket": bucket, "key": key, "size_bytes": size_bytes},
+        )
         
         url = f"s3://{bucket}/{key}"
         return url,size_bytes
