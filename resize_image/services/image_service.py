@@ -1,3 +1,4 @@
+import uuid
 from PIL.ImageFile import ImageFile
 from PIL.Image import Image
 from storage import S3Storage,DynamoDBStorage
@@ -19,7 +20,7 @@ class ImageService:
         self._output_bucket = output_bucket
         
         
-    def processImage(self, src_bucket:str,src_key:str, dst_key:str) -> str:
+    def processImage(self, src_bucket:str,src_key:str, dst_key:str, etag:str | None = None) -> str:
         """
         Download an image from S3, create a thumbnail,
         and upload the processed image to the output bucket.
@@ -38,3 +39,12 @@ class ImageService:
         url, size_bytes = self._s3_storage.uploadImage(image=thumbnail,bucket=self._output_bucket,key=dst_key)
         
         return ""
+    
+    @staticmethod
+    def _make_id(bucket:str, key:str, etag:str |None):
+        """Same object (bucket + key + etag) always gets the same id."""
+        return str(uuid.uuid5(uuid.NAMESPACE_URL,f"{bucket}/{key}/{etag or ''}"))
+        
+        
+        
+        
