@@ -47,19 +47,21 @@ class S3Storage:
         image_buffer = BytesIO()
         
         image.save(image_buffer,'PNG')
-        image_buffer.seek(0) #Set the cursor at the beggining 
+        
+        image_bytes = image_buffer.getvalue()#All the image bytes
+        size_bytes = len(image_bytes)   
+        
             
         self._s3.put_object(        
-                Body=image_buffer,
+                Body=image_bytes,
                 Bucket=bucket,
                 ContentType=f'image/png',
-                Key=key                 
-                )
+                Key=key)
         
             
             
         
         url = f"s3://{bucket}/{key}"
-        return url 
+        return url,size_bytes
             
     
