@@ -14,7 +14,7 @@ class DynamoDBStorage:
         
         
         
-    def putItem(self,url_path:str,thumbnail_size_bytes:int) -> bool:
+    def save_thumbnail(self,url_path:str,thumbnail_size_bytes:int) -> bool:
         now = datetime.now(timezone.utc).isoformat()
         
         item = {
