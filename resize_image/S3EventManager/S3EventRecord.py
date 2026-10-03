@@ -129,13 +129,19 @@ class Record:
         return f"{self.THUMBNAIL_PREFIX}{self.key}"
 
     def should_process(self) -> bool:
-        #?True if this record represents an image worth resizing."""
-        return (
-            not self.is_folder_marker
-            and self.is_image
-            and not self.is_thumbnail
-        )
-        
-        
+        """True if this record represents an image worth resizing."""
+        reason = None
+        if self.is_folder_marker:
+            reason = "folder marker or empty object"
+        elif not self.is_image:
+            reason = f"unsupported extension: {self.extension!r}"
+        elif self.is_thumbnail:
+            reason = "already a thumbnail"
+
+        if reason:
+            logger.info("Skipping record", extra={"key": self.key, "reason": reason})
+            return False
+        return True
+            
 
 
