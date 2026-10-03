@@ -35,10 +35,17 @@ class ImageService:
         """
         image: ImageFile = self._s3_storage.downloadImage(bucket=src_bucket,key=src_key)
         thumbnail = self._processor.createThumbnail(image=image)
+        uri, size_bytes = self._s3_storage.uploadImage(image=thumbnail,bucket=self._output_bucket,key=dst_key)
+        item_id = self._make_id(src_bucket,src_key,etag=etag)
         
-        url, size_bytes = self._s3_storage.uploadImage(image=thumbnail,bucket=self._output_bucket,key=dst_key)
+        self._metadata_store.save_thumbnail(
+            item_id=item_id,
+            url_path=uri,
+            thumbnail_size_bytes=size_bytes)
         
-        return ""
+        logger.info("Image processed", extra={"id": item_id, "src_key": src_key, "dst_key": dst_key})
+        
+        return item_id
     
     @staticmethod
     def _make_id(bucket:str, key:str, etag:str |None):
