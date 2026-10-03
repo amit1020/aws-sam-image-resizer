@@ -68,7 +68,7 @@ Resources:
             BucketName: !Sub ${AWS::StackName}-uploads-${AWS::Region}
         - S3WritePolicy:
             BucketName: !Sub ${AWS::StackName}-outputs-${AWS::Region}
-        - DynamoDBWritePolicy:
+        - DynamoDBCrudPolicy:
             TableName: !Ref ThumbgenProccessImages
       Events:
         FileUploadEvent:

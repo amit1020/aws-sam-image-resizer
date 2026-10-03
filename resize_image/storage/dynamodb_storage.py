@@ -1,4 +1,5 @@
 from datetime import datetime
 
 class DynampDBStorage:
-    pass 
+    def __init__(self,dynamodb_client) -> None:
+        self.dodb = dynamodb_client
