@@ -40,6 +40,9 @@ class Record:
         self.sequencer = sequencer
         self.arn = arn 
 
+
+
+
     @classmethod
     def from_dict(cls,raw_record):
         try:
@@ -47,12 +50,15 @@ class Record:
             bucket_data = s3_data["bucket"]
             object_data = s3_data["object"]
             raw_key = object_data["key"]
-
+            key = unquote_plus(raw_key)
+            if key != raw_key:
+                logger.debug("Decoded object key", extra={"raw_key": raw_key, "key": key})
+                
             return cls(
                 event_name=raw_record["eventName"],
                 event_time=cls._parse_event_time(raw_record["eventTime"]),
                 bucket_name=bucket_data["name"],
-                key=unquote_plus(raw_key),
+                key=key,
                 raw_key=raw_key,
                 size=object_data.get("size"),
                 etag=object_data.get("eTag"),
@@ -62,6 +68,12 @@ class Record:
             )
         except KeyError as e:
             raise InvalidRecordError(f"Missing expected field: {e}") from e
+
+
+
+
+
+
 
     @staticmethod
     def _parse_event_time(value: str) -> datetime:
@@ -86,9 +98,8 @@ class Record:
     
     @property
     def is_folder_marker(self):
-        #?return True for console-created folders and empty uploads.
-        return self.key.endswith("/") or not self.size#Check if self.size is 0
-        
+        #*return True for console-created folders and empty uploads.
+        return self.key.endswith("/") or self.size == 0
     
     @property
     def is_image(self):
