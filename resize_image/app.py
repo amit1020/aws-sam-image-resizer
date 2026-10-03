@@ -1,7 +1,9 @@
 import json
 
 # import requests
-
+#*Logger
+import logging
+logger = logging.getLogger(__name__)
 
 def resize_image_handler(event, context):
 

@@ -1,6 +1,7 @@
-import logging
 from .S3EventRecord import InvalidRecordError,Record
 
+#*Logger
+import logging
 logger = logging.getLogger(__name__)
 
 

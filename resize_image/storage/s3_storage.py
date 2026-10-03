@@ -2,6 +2,10 @@ from PIL import Image
 from PIL.ImageFile import ImageFile
 from io import BytesIO 
 
+#*Logger
+import logging
+logger = logging.getLogger(__name__)
+
 
 class S3Storage:
     def __init__(self,s3_client) -> None:

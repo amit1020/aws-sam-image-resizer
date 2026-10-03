@@ -2,6 +2,9 @@ from datetime import datetime,timezone
 import uuid
 from boto3.dynamodb.conditions import Key
 
+#*Logger
+import logging
+logger = logging.getLogger(__name__)
 
 class DynampDBStorage:
     def __init__(self,dynamodb_client) -> None:

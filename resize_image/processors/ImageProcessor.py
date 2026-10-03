@@ -4,7 +4,9 @@
 
 from PIL import Image, ImageOps
 
-#from PIL.ImageFile import ImageFile
+#*Logger
+import logging
+logger = logging.getLogger(__name__)
 
 
 

@@ -1,10 +1,14 @@
 from datetime import datetime
 from urllib.parse import unquote_plus
 
+#*Logger
+import logging
+logger = logging.getLogger(__name__)
+
+
 class InvalidRecordError(Exception):
     """Raised when an S3 event record is missing expected fields or is malformed."""
     pass
-
 
 
 class Record:

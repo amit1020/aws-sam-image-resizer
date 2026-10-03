@@ -1,6 +1,10 @@
 from dataclasses import dataclass
 import os 
 
+#*Logger
+import logging
+logger = logging.getLogger(__name__)
+
 @dataclass(frozen=True)
 class Config:
     size : int 
