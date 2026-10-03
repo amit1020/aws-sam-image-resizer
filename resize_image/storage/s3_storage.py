@@ -45,24 +45,21 @@ class S3Storage:
                 
         
         image_buffer = BytesIO()
-        try:
-            image.save(image_buffer,'PNG')
-            image_buffer.seek(0) #Set the cursor at the beggining 
+        
+        image.save(image_buffer,'PNG')
+        image_buffer.seek(0) #Set the cursor at the beggining 
             
-            response = self._s3.put_object(        
+        self._s3.put_object(        
                 Body=image_buffer,
                 Bucket=bucket,
                 ContentType=f'image/png',
                 Key=key                 
-                
-            )
-            #TODO check the response 
+                )
+        
             
             
         
-            url = f"s3://{bucket}/{key}"
-            #TODO: Add the new image to the table 
-            return url 
+        url = f"s3://{bucket}/{key}"
+        return url 
             
-        except Exception as e:
-            raise e 
+    
