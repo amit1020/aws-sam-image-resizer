@@ -17,12 +17,29 @@ Resources:
 
 
 #*------DynamoDB table--------
-  ThumbgenProccessImages:
-    Type: AWS::Serverless::SimpleTable
+  ThumbnailsTable:
+    Type: AWS::DynamoDB::Table
     Properties:
-      PrimaryKey:
-        Name: id
-        Type: String
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: entityType
+          AttributeType: S
+        - AttributeName: createdAt
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: ByCreatedAt
+          KeySchema:
+            - AttributeName: entityType
+              KeyType: HASH
+            - AttributeName: createdAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
 
 
 #*---------S3 Buckets--------
@@ -62,14 +79,14 @@ Resources:
         Variables:
           THUMBNAIL_SIZE: 128
           OUTPUT_BUCKET: !Ref ProcessedRawImageBucket
-          TABLE_NAME: !Ref ThumbgenProccessImages
+          TABLE_NAME: !Ref ThumbnailsTable
       Policies:
         - S3ReadPolicy:
             BucketName: !Sub ${AWS::StackName}-uploads-${AWS::Region}
         - S3WritePolicy:
             BucketName: !Sub ${AWS::StackName}-outputs-${AWS::Region}
         - DynamoDBCrudPolicy:
-            TableName: !Ref ThumbgenProccessImages
+            TableName: !Ref ThumbnailsTable
       Events:
         FileUploadEvent:
           Type: S3 # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
