@@ -29,9 +29,13 @@ class DynamoDBStorage:
         }
         try:
             self._table.put_item(Item=item,ConditionExpression='attribute_not_exists(id)') 
+            logger.debug("Saved thumbnail metadata", extra={"id": item_id, "url": url_path})
+
             return True
         except ClientError as e:
             if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+                #Not a fail but Importent event  
+                logger.info("Thumbnail already exists, skipping", extra={"id": item_id})
                 return False
             raise
         
