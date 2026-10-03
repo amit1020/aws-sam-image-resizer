@@ -1,3 +1,6 @@
+
+
+
 from datetime import datetime
 from urllib.parse import unquote_plus
 
@@ -35,6 +38,7 @@ class Record:
         self.etag = etag
         self.version_id = version_id
         self.sequencer = sequencer
+        self.arn = arn 
 
     @classmethod
     def from_dict(cls,raw_record):

@@ -1,8 +1,11 @@
+from logging import Logger
+
+
 from .S3EventRecord import InvalidRecordError,Record
 
 #*Logger
 import logging
-logger = logging.getLogger(__name__)
+logger: Logger = logging.getLogger(__name__)
 
 
 class S3Event:
@@ -17,6 +20,8 @@ class S3Event:
                 records.append(Record.from_dict(raw_event))
             except InvalidRecordError as e :
                 logger.warning("Skipping malformed record: %s", e)
+                
+       
         return cls(records)
         
     @property
