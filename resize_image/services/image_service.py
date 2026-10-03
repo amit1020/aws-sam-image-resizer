@@ -1,9 +1,5 @@
 from PIL.ImageFile import ImageFile
-
-
 from PIL.Image import Image
-
-
 from storage import S3Storage
 from processors import ImageProcessor
 
@@ -17,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 class ImageService:
     def __init__(self, storage:S3Storage,processor:ImageProcessor, output_bucket:str) -> None:
-        self._storage = storage
+        self._s3_storage = storage
         self._processor = processor
         self._output_bucket = output_bucket
         
@@ -35,9 +31,9 @@ class ImageService:
         Returns:
             str: The S3 URI of the uploaded thumbnail.
         """
-        image: ImageFile = self._storage.downloadImage(bucket=src_bucket,key=src_key)
+        image: ImageFile = self._s3_storage.downloadImage(bucket=src_bucket,key=src_key)
         thumbnail = self._processor.createThumbnail(image=image)
         
-        url, size_bytes = self._storage.uploadImage(image=thumbnail,bucket=self._output_bucket,key=dst_key)
+        url, size_bytes = self._s3_storage.uploadImage(image=thumbnail,bucket=self._output_bucket,key=dst_key)
         
         return ""
