@@ -75,22 +75,24 @@ class Record:
     
     
     @property
-    def extention(self):
-        #?Lowercase file extension without the leading dot, or empty if none
-        name: str = self.filename
-        try:
-            return name.rsplit(".",1)[-1].lower()
-        except Exception as e:
-            raise e
+    def extension(self) -> str:
+        """Lowercase file extension without the dot, or empty string if none."""
+        name = self.filename
+        return name.rsplit(".", 1)[-1].lower() if "." in name else ""
+    
+    
+    
+    
     
     @property
     def is_folder_marker(self):
         #?return True for console-created folders and empty uploads.
         return self.key.endswith("/") or not self.size#Check if self.size is 0
+        
     
     @property
     def is_image(self):
-        return self.extention in self.IMAGE_EXTENSIONS
+        return self.extension in self.IMAGE_EXTENSIONS
     
 
     @property
