@@ -24,6 +24,10 @@ class S3Storage:
             ImageFile: A PIL image created from the downloaded object data.
         """
         image_bytes = self._s3.get_object(Bucket=bucket,Key=key)["Body"].read()
+        logger.debug(
+            "Downloaded image",
+            extra={"bucket": bucket, "key": key, "size_bytes": len(image_bytes)},
+        )
         return Image.open(fp=BytesIO(initial_bytes=image_bytes))
         
     
@@ -37,7 +41,7 @@ class S3Storage:
         Args:
             image (ImageFile): The image to upload.
             bucket (str): The destination S3 bucket name.
-            key (str): The object's key in the S3 bucket.
+            key (str): The object's key in the S3 bucket -> The key is record.thumbnail_key
 
         Returns:
             str: The S3 URI of the uploaded image.
@@ -50,13 +54,11 @@ class S3Storage:
         
         image_bytes = image_buffer.getvalue()#All the image bytes
         size_bytes = len(image_bytes)   
-        
-            
         self._s3.put_object(        
                 Body=image_bytes,
                 Bucket=bucket,
                 ContentType=f'image/png',
-                Key=key)
+                Key=key) #The ke
         
             
             
@@ -64,4 +66,5 @@ class S3Storage:
         url = f"s3://{bucket}/{key}"
         return url,size_bytes
             
-    
+
+ 

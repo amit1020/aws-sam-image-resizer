@@ -145,3 +145,13 @@ class Record:
             
 
 
+    @property
+    def thumbnail_key(self) -> str:
+        """
+        Destination key for the thumbnail: adds the thumbnails/ prefix
+        and replaces the extension with .png.
+
+        Example: "uploads/cat.jpg" -> "thumbnails/uploads/cat.png"
+        """
+        base = self.key.rsplit(".", 1)[0]
+        return f"{self.THUMBNAIL_PREFIX}{base}.png"
