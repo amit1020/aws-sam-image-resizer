@@ -6,7 +6,9 @@ from boto3.dynamodb.conditions import Key
 import logging
 logger = logging.getLogger(__name__)
 
-class DynampDBStorage:
+
+
+class DynamoDBStorage:
     def __init__(self,dynamodb_client) -> None:
         self._table = dynamodb_client
         
