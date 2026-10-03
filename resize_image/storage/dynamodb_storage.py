@@ -1,6 +1,6 @@
 from datetime import datetime,timezone
-import uuid
-from boto3.dynamodb.conditions import Key
+from botocore.exceptions import ClientError
+
 
 #*Logger
 import logging
@@ -14,24 +14,26 @@ class DynamoDBStorage:
         
         
         
-    def save_thumbnail(self,url_path:str,thumbnail_size_bytes:int) -> bool:
+    def save_thumbnail(self,item_id:str,url_path:str,thumbnail_size_bytes:int) -> bool:
+        #!-----item_id should be created by uuid5
         now = datetime.now(timezone.utc).isoformat()
         
         item = {
-            'id': str(uuid.uuid4()),
+            'id': item_id,
+            'entityType': 'THUMBNAIL',
             'url': url_path,
             'sizeBytes': thumbnail_size_bytes,
             'sizeKB': f'{thumbnail_size_bytes / 1024:.1f} KB',
             'createdAt': now,
-            'updateAt':now,
+            'updatedAt':now,
         }
         try:
             self._table.put_item(Item=item,ConditionExpression='attribute_not_exists(id)') 
             return True
-        except Exception as e:
-            print(e)
-            return False 
-        
+        except ClientError as e:
+            if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+                return False
+            raise
         
     
 
