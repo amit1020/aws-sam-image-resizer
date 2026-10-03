@@ -4,8 +4,12 @@ from PIL.ImageFile import ImageFile
 from PIL.Image import Image
 
 
-from resize_image.storage.s3_storage import S3Storage
-from resize_image.processors.ImageProcessor import ImageProcessor
+from storage import S3Storage
+from processors import ImageProcessor
+
+
+
+
 
 #*Logger
 import logging
