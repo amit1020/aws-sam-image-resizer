@@ -1,3 +1,9 @@
+from PIL.ImageFile import ImageFile
+
+
+from PIL.Image import Image
+
+
 from resize_image.storage.s3_storage import S3Storage
 from resize_image.processors.ImageProcessor import ImageProcessor
 
@@ -23,7 +29,7 @@ class ImageService:
         Returns:
             str: The S3 URI of the uploaded thumbnail.
         """
-        image = self._storage.downloadImage(bucket=src_bucket,key=src_key)
+        image: ImageFile = self._storage.downloadImage(bucket=src_bucket,key=src_key)
         thumbnail = self._processor.createThumbnail(image=image)
         
-        return self._storage.uploadImage(image=image,bucket=self._output_bucket,key=dst_key)
+        return self._storage.uploadImage(image=thumbnail,bucket=self._output_bucket,key=dst_key)
