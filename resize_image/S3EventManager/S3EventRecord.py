@@ -54,7 +54,7 @@ class Record:
             if key != raw_key:
                 logger.debug("Decoded object key", extra={"raw_key": raw_key, "key": key})
                 
-            return cls(
+            record = cls(
                 event_name=raw_record["eventName"],
                 event_time=cls._parse_event_time(raw_record["eventTime"]),
                 bucket_name=bucket_data["name"],
@@ -66,6 +66,18 @@ class Record:
                 sequencer=object_data.get("sequencer"),
                 arn=bucket_data.get("arn")
             )
+            
+            logger.debug(
+                "Parsed S3 record",
+                extra={
+                    "event_name": record.event_name,
+                    "bucket": record.bucket_name,
+                    "key": record.key,
+                    "size": record.size,
+                },
+            )
+
+            return record
         except KeyError as e:
             raise InvalidRecordError(f"Missing expected field: {e}") from e
 
