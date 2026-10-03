@@ -20,8 +20,9 @@ class ImageProcessor:
         
 
     def createThumbnail(self,image: Image.Image) -> Image.Image:
+        target_size = (self.createThumbnail, self._thumbnail_size)
 
-        return ImageOps.fit(
+        thumbnail = ImageOps.fit(
             image=image,
             size=(
                 self._thumbnail_size,
@@ -29,3 +30,16 @@ class ImageProcessor:
             ),
             method=Image.Resampling.LANCZOS,
         )
+        
+        logger.debug(
+                "Thumbnail created",
+                extra={
+                    "original_size": image.size,       # (width, height) — ממדים, לא בתים
+                    "thumbnail_size": thumbnail.size,
+                    "mode": image.mode,                # RGB / RGBA / P / L ...
+                },
+            )
+        
+        return thumbnail
+        
+        
