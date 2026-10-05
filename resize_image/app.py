@@ -21,7 +21,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-#-----Start cold vars(Class objects - config and Image_service)
+#-----Cold start vars(Class objects - config and Image_service)
 config = load_config()
 
 Image_service = ImageService(
@@ -34,8 +34,10 @@ Image_service = ImageService(
 
 
 def resize_image_handler(event, context):
-    
+    s3_event = S3Event.from_dict(event) #Rescue the data and make it easy to use 
+    records = s3_event.image_records
 
+    logger.info("Received event", extra={"total":len(s3_event),"to_process":len(records)})
 
     return {
         "statusCode": 200,
