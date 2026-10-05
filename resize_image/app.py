@@ -1,4 +1,6 @@
-import json, boto3 
+import json, boto3
+
+from resize_image.services import ImageService 
 
 #!Test - delete after that
 from .config import load_config
@@ -24,7 +26,7 @@ logger = logging.getLogger(__name__)
 #-----Cold start vars(Class objects - config and Image_service)
 config = load_config()
 
-Image_service = ImageService(
+imageservice = ImageService(
     s3_storage= S3Storage(boto3.client("s3")),
     metadata_store=DynamoDBStorage(boto3.resource("dynamodb").Table(config.table)),
     processor= ImageProcessor(config.size),
@@ -38,11 +40,22 @@ def resize_image_handler(event, context):
     records = s3_event.image_records
 
     logger.info("Received event", extra={"total":len(s3_event),"to_process":len(records)})
+    failed = 0 
+    
+    for record in records:
+        try:
+            imageservice.processImage(
+src_bucket=record.bucket_name,
+                src_key=record.key,
+                dst_key=record.thumbnail_key,
+                etag=record.etag
+            )
+        except Exception:
+            failed +=1
+            logger.exception("Failed to process image",
+                             extra={"bucket": record.bucket_name, "key": record.key})
+    if failed:
+        raise RuntimeError(f"{failed} of {len(records)} records failed")
 
-    return {
-        "statusCode": 200,
-        "body": json.dumps({
-            "message": "hello world",
-            # "location": ip.text.replace("\n", "")
-        }),
-    }
+    return {"processed": len(records)}
+    
